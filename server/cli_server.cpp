@@ -12,17 +12,17 @@ int (*server::_exec)(int argc, const char** argv) = server::_exec_null;
 
 
 const server::EscSeq server::escseq_list[] = {
-{.str = "\x0D",		.len = 1,	.handler = server::_esc_return},
-{.str = "\x0A",		.len = 1,	.handler = server::_esc_return},
-{.str = CLI_ESC"[D",	.len = 3,	.handler = server::_esc_move_cursor_left},
-{.str = CLI_ESC"[C",	.len = 3,	.handler = server::_esc_move_cursor_right},
-{.str = CLI_ESC"[H",	.len = 3,	.handler = server::_esc_home},
-{.str = CLI_ESC"[F",	.len = 3,	.handler = server::_esc_end},
-{.str = "\x08",		.len = 1,	.handler = server::_esc_back},
-{.str = "\x7F",		.len = 1,	.handler = server::_esc_back},
-{.str = CLI_ESC"[3~",	.len = 4,	.handler = server::_esc_del},
-{.str = CLI_ESC"[A",	.len = 3,	.handler = server::_esc_up},
-{.str = CLI_ESC"[B",	.len = 3,	.handler = server::_esc_down},
+{.str = "\x0D",         .len = 1,   .handler = server::_esc_return},
+{.str = "\x0A",         .len = 1,   .handler = server::_esc_return},
+{.str = CLI_ESC"[D",	.len = 3,   .handler = server::_esc_move_cursor_left},
+{.str = CLI_ESC"[C",	.len = 3,   .handler = server::_esc_move_cursor_right},
+{.str = CLI_ESC"[H",	.len = 3,   .handler = server::_esc_home},
+{.str = CLI_ESC"[F",	.len = 3,   .handler = server::_esc_end},
+{.str = "\x08",         .len = 1,   .handler = server::_esc_back},
+{.str = "\x7F",         .len = 1,   .handler = server::_esc_back},
+{.str = CLI_ESC"[3~",   .len = 4,   .handler = server::_esc_del},
+{.str = CLI_ESC"[A",    .len = 3,   .handler = server::_esc_up},
+{.str = CLI_ESC"[B",    .len = 3,   .handler = server::_esc_down},
 };
 
 
