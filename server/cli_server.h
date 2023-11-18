@@ -21,8 +21,8 @@ class server
     friend void print_blocking(const char* str);
 private:
     static inline emb::Tty* _tty{nullptr};
-    static inline emb::gpio::OutputInterface* _pin_rts{nullptr};
-    static inline emb::gpio::InputInterface* _pin_cts{nullptr};
+    static inline emb::gpio::Output* _pin_rts{nullptr};
+    static inline emb::gpio::Input* _pin_cts{nullptr};
 
     static inline char _prompt[CLI_PROMPT_MAX_LENGTH]{};
     static inline emb::string<CLI_CMDLINE_MAX_LENGTH> _cmdline;
@@ -44,7 +44,7 @@ public:
     server(const server& other) = delete;
     server& operator=(const server& other) = delete;
     static void init(const char* device_name, emb::Tty* tty,
-                     emb::gpio::OutputInterface* pin_rts, emb::gpio::InputInterface* pin_cts);
+                     emb::gpio::Output* pin_rts, emb::gpio::Input* pin_cts);
     static void run();
     static void register_exec_callback(int (*exec)(int argc, const char** argv))
     {

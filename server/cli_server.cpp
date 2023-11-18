@@ -30,7 +30,7 @@ const size_t escseq_list_size = sizeof(server::escseq_list) / sizeof(server::esc
 
 
 void server::init(const char* device_name, emb::Tty* tty,
-                  emb::gpio::OutputInterface* pin_rts, emb::gpio::InputInterface* pin_cts) {
+                  emb::gpio::Output* pin_rts, emb::gpio::Input* pin_cts) {
     _tty = tty;
     _pin_rts = pin_rts;	// output
     _pin_cts = pin_cts;	// input
