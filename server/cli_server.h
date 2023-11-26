@@ -6,7 +6,7 @@
 #include <emblib/interfaces/tty.h>
 #include <emblib/interfaces/gpio.h>
 #include <emblib/queue.h>
-#include <emblib/string.h>
+#include <emblib/staticstring.h>
 #include <emblib/circularbuffer.h>
 
 #include "../cli_config.h"
@@ -25,15 +25,15 @@ private:
     static inline emb::gpio::Input* _pin_cts{nullptr};
 
     static inline char _prompt[CLI_PROMPT_MAX_LENGTH]{};
-    static inline emb::string<CLI_CMDLINE_MAX_LENGTH> _cmdline;
-    static inline emb::string<CLI_ESCSEQ_MAX_LENGTH> _escseq;
+    static inline emb::static_string<CLI_CMDLINE_MAX_LENGTH> _cmdline;
+    static inline emb::static_string<CLI_ESCSEQ_MAX_LENGTH> _escseq;
 
     static inline size_t _cursor_pos = 0;
 
     static inline emb::queue<char, CLI_OUTBUT_BUFFER_LENGTH> _output_buf;
 
 #ifdef CLI_USE_HISTORY
-    static inline emb::circular_buffer<emb::string<CLI_CMDLINE_MAX_LENGTH>, CLI_HISTORY_LENGTH> _history;
+    static inline emb::circular_buffer<emb::static_string<CLI_CMDLINE_MAX_LENGTH>, CLI_HISTORY_LENGTH> _history;
     static inline size_t _last_cmd_history_pos{0};
     static inline size_t _history_position{0};
     static inline bool _new_cmd_saved{false};
@@ -61,7 +61,7 @@ private:
     static void _move_cursor(int offset);
     static void _print_welcome();
     static void _print_prompt();
-    static int _tokenize(const char** argv, emb::string<CLI_CMDLINE_MAX_LENGTH>& cmdline);
+    static int _tokenize(const char** argv, emb::static_string<CLI_CMDLINE_MAX_LENGTH>& cmdline);
 
     static int (*_exec)(int argc, const char** argv);
     static int _exec_null(int argc, const char** argv)

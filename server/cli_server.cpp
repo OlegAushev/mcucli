@@ -182,7 +182,7 @@ void server::_print_prompt() {
 }
 
 
-int server::_tokenize(const char** argv, emb::string<CLI_CMDLINE_MAX_LENGTH>& cmdline) {
+int server::_tokenize(const char** argv, emb::static_string<CLI_CMDLINE_MAX_LENGTH>& cmdline) {
     int argc = 0;
     size_t idx = 0;
 
