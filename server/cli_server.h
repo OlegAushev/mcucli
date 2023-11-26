@@ -20,6 +20,7 @@ class server
     friend void print(const char* str);
     friend void print_blocking(const char* str);
 private:
+    static inline bool _enabled{true};
     static inline emb::Tty* _tty{nullptr};
     static inline emb::gpio::Output* _pin_rts{nullptr};
     static inline emb::gpio::Input* _pin_cts{nullptr};
@@ -50,6 +51,9 @@ public:
     {
         _exec = exec;
     }
+
+    static void enable();
+    static void disable();
 private:
     static void _print(char ch);
     static void _print(const char* str);

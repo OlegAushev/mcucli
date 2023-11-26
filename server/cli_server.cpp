@@ -46,7 +46,7 @@ void server::init(const char* device_name, emb::Tty* tty,
 
 
 void server::run() {
-    if (!_tty) return;
+    if (!_tty || !_enabled) return;
 
     if (!_output_buf.empty()) {
         if (_tty->putchar(_output_buf.front()) != EOF) {
@@ -58,6 +58,16 @@ void server::run() {
             _process_char(static_cast<char>(ch));
         }
     }
+}
+
+
+void server::enable() {
+    _enabled = true;
+}
+
+
+void server::disable() {
+    _enabled = false;
 }
 
 
