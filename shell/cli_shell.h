@@ -3,7 +3,7 @@
 
 #include "../cli_config.h"
 #include <emblib/algorithm.h>
-#include <emblib/staticvector.h>
+#include <emblib/static_vector.h>
 #include <algorithm>
 #include <initializer_list>
 

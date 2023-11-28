@@ -6,8 +6,8 @@
 #include <emblib/interfaces/tty.h>
 #include <emblib/interfaces/gpio.h>
 #include <emblib/queue.h>
-#include <emblib/staticstring.h>
-#include <emblib/circularbuffer.h>
+#include <emblib/static_string.h>
+#include <emblib/circular_buffer.h>
 
 #include "../cli_config.h"
 
