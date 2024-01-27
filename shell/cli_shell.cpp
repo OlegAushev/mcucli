@@ -35,7 +35,7 @@ const Cmd cli_list = {
 // Cmd* shell::_commands_end = shell::_commands + shell::command_count;
 
 
-void shell::init(std::initializer_list<const Cmd*> cmds) {
+void shell::initialize(std::initializer_list<const Cmd*> cmds) {
     for (const auto& cmd : cmds) {
         _commands.push_back(cmd);
     }

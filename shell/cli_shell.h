@@ -42,7 +42,7 @@ class shell {
 private:
     static inline emb::static_vector<const Cmd*, 16> _commands{};
 public:
-    static void init(std::initializer_list<const Cmd*> cmds);
+    static void initialize(std::initializer_list<const Cmd*> cmds);
     static int exec(int argc, const char** argv);
     static inline char cmd_output_buf[CLI_CMD_OUTPUT_LENGTH]{0};
 };
