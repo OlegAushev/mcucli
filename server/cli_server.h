@@ -22,8 +22,8 @@ class server
 private:
     static inline bool _enabled{true};
     static inline emb::tty* _tty{nullptr};
-    static inline emb::gpio::output* _pin_rts{nullptr};
-    static inline emb::gpio::input* _pin_cts{nullptr};
+    static inline emb::gpio::output_pin* _pin_rts{nullptr};
+    static inline emb::gpio::input_pin* _pin_cts{nullptr};
 
     static inline char _prompt[CLI_PROMPT_MAX_LENGTH]{};
     static inline emb::static_string<CLI_CMDLINE_MAX_LENGTH> _cmdline;
@@ -45,7 +45,7 @@ public:
     server(const server& other) = delete;
     server& operator=(const server& other) = delete;
     static void init(const char* device_name, emb::tty* tty,
-                     emb::gpio::output* pin_rts, emb::gpio::input* pin_cts);
+                     emb::gpio::output_pin* pin_rts, emb::gpio::input_pin* pin_cts);
     static void run();
     static void register_exec_callback(int (*exec)(int argc, const char** argv))
     {
