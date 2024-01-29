@@ -30,7 +30,8 @@ const size_t escseq_list_size = sizeof(server::escseq_list) / sizeof(server::esc
 
 
 void server::initialize(const char* device_name, emb::tty* tty,
-                  emb::gpio::output_pin* pin_rts, emb::gpio::input_pin* pin_cts) {
+                        emb::gpio::output_pin* pin_rts, emb::gpio::input_pin* pin_cts,
+                        const char* welcome_message) {
     _tty = tty;
     _pin_rts = pin_rts;	// output
     _pin_cts = pin_cts;	// input
@@ -40,7 +41,7 @@ void server::initialize(const char* device_name, emb::tty* tty,
     strncat(_prompt, device_name, CLI_DEVICE_NAME_MAX_LENGTH);
     strcat(_prompt, prompt_end);
 
-    _print_welcome();
+    _print_welcome(welcome_message);
     _print_prompt();
 }
 
@@ -175,11 +176,14 @@ void server::_move_cursor(int offset) {
 }
 
 
-void server::_print_welcome() {
+void server::_print_welcome(const char* welcome_message) {
     cli::nextline_blocking();
     cli::nextline_blocking();
     cli::nextline_blocking();
-    cli::print_blocking(CLI_WELCOME_STRING);
+    
+    if (welcome_message != nullptr) {
+        cli::print_blocking(welcome_message);
+    }
     cli::nextline_blocking();
 }
 
