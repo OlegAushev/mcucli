@@ -22,21 +22,6 @@ struct Cmd {
 };
 
 
-// inline bool operator<(const Cmd& lhs, const Cmd& rhs) {
-//     return strcmp(lhs.name, rhs.name) < 0;
-// }
-
-
-// inline bool operator<(const char* name, const Cmd& cmd) {
-//     return strcmp(name, cmd.name) < 0;
-// }
-
-
-// inline bool operator==(const char* name, const Cmd& cmd) {
-//     return strcmp(name, cmd.name) == 0;
-// }
-
-
 class shell {
     friend int list(int, const char**);
 private:

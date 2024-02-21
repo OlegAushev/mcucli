@@ -21,20 +21,6 @@ const Cmd cli_list = {
 };
 
 
-// Cmd shell::_commands[] = {
-// {"list",		shell::list, 		"Prints all available commands."},
-// {"sysinfo",		cli_sysinfo,		"Prints basic information about system."},
-// {"reboot",		cli_reboot,		"Reboots device."},
-// {"uptime",		cli_uptime,		"Shows system uptime."},
-// {"syslog",		cli_syslog,		"Syslog control utility."},
-// {"sysctl",		cli_sysctl,		"System control utility."},
-// };
-
-
-// const size_t shell::command_count = sizeof(shell::_commands) / sizeof(shell::_commands[0]);
-// Cmd* shell::_commands_end = shell::_commands + shell::command_count;
-
-
 void shell::initialize(std::initializer_list<const Cmd*> cmds) {
     for (const auto& cmd : cmds) {
         _commands.push_back(cmd);
