@@ -21,7 +21,7 @@ const Cmd cli_list = {
 };
 
 
-void shell::initialize(std::initializer_list<const Cmd*> cmds) {
+void shell::init(std::initializer_list<const Cmd*> cmds) {
     for (const auto& cmd : cmds) {
         _commands.push_back(cmd);
     }

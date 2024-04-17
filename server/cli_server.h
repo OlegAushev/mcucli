@@ -44,7 +44,7 @@ private:
 public:
     server(const server& other) = delete;
     server& operator=(const server& other) = delete;
-    static void initialize(const char* device_name, emb::tty* tty,
+    static void init(const char* device_name, emb::tty* tty,
                            emb::gpio::output_pin* pin_rts, emb::gpio::input_pin* pin_cts,
                            const char* welcome_message = nullptr);
     static void run();

@@ -29,7 +29,7 @@ const server::EscSeq server::escseq_list[] = {
 const size_t escseq_list_size = sizeof(server::escseq_list) / sizeof(server::escseq_list[0]);
 
 
-void server::initialize(const char* device_name, emb::tty* tty,
+void server::init(const char* device_name, emb::tty* tty,
                         emb::gpio::output_pin* pin_rts, emb::gpio::input_pin* pin_cts,
                         const char* welcome_message) {
     _tty = tty;
