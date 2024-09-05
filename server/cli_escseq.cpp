@@ -8,10 +8,10 @@ void server::_esc_return() {
 #ifdef CLI_USE_HISTORY
     if (!_cmdline.empty()) 	{
         if (_history.empty()) {
-            _history.push(_cmdline);
+            _history.push_back(_cmdline);
             _last_cmd_history_pos = 0;
         } else if (_cmdline != _history.back()) {
-            _history.push(_cmdline);
+            _history.push_back(_cmdline);
             _last_cmd_history_pos = (_last_cmd_history_pos + 1) % _history.capacity();
         }
     }
