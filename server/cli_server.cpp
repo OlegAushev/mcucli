@@ -29,8 +29,8 @@ const server::EscSeq server::escseq_list[] = {
 const size_t escseq_list_size = sizeof(server::escseq_list) / sizeof(server::escseq_list[0]);
 
 
-void server::init(const char* device_name, emb::tty* tty,
-                        emb::gpio::output_pin* pin_rts, emb::gpio::input_pin* pin_cts,
+void server::init(const char* device_name, mcu::uart::tty* tty,
+                        mcu::gpio::output_pin* pin_rts, mcu::gpio::input_pin* pin_cts,
                         const char* welcome_message) {
     _tty = tty;
     _pin_rts = pin_rts;	// output
@@ -180,7 +180,7 @@ void server::_print_welcome(const char* welcome_message) {
     cli::nextline_blocking();
     cli::nextline_blocking();
     cli::nextline_blocking();
-    
+
     if (welcome_message != nullptr) {
         cli::print_blocking(welcome_message);
     }

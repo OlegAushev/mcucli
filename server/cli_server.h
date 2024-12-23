@@ -3,11 +3,11 @@
 
 #include <cstring>
 #include <cstdio>
-#include <emblib/interfaces/tty.h>
-#include <emblib/interfaces/gpio.h>
-#include <emblib/queue.h>
-#include <emblib/static_string.h>
-#include <emblib/circular_buffer.h>
+#include <mcudrv/generic/uart.hpp>
+#include <mcudrv/generic/gpio.hpp>
+#include <emblib/queue.hpp>
+#include <emblib/static_string.hpp>
+#include <emblib/circular_buffer.hpp>
 
 #include "../cli_config.h"
 
@@ -21,9 +21,9 @@ class server
     friend void print_blocking(const char* str);
 private:
     static inline bool _enabled{true};
-    static inline emb::tty* _tty{nullptr};
-    static inline emb::gpio::output_pin* _pin_rts{nullptr};
-    static inline emb::gpio::input_pin* _pin_cts{nullptr};
+    static inline mcu::uart::tty* _tty{nullptr};
+    static inline mcu::gpio::output_pin* _pin_rts{nullptr};
+    static inline mcu::gpio::input_pin* _pin_cts{nullptr};
 
     static inline char _prompt[CLI_PROMPT_MAX_LENGTH]{};
     static inline emb::static_string<CLI_CMDLINE_MAX_LENGTH> _cmdline;
@@ -44,8 +44,8 @@ private:
 public:
     server(const server& other) = delete;
     server& operator=(const server& other) = delete;
-    static void init(const char* device_name, emb::tty* tty,
-                           emb::gpio::output_pin* pin_rts, emb::gpio::input_pin* pin_cts,
+    static void init(const char* device_name, mcu::uart::tty* tty,
+                           mcu::gpio::output_pin* pin_rts, mcu::gpio::input_pin* pin_cts,
                            const char* welcome_message = nullptr);
     static void run();
     static void register_exec_callback(int (*exec)(int argc, const char** argv))

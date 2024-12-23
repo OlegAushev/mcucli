@@ -2,8 +2,8 @@
 
 
 #include "../cli_config.h"
-#include <emblib/algorithm.h>
-#include <emblib/static_vector.h>
+#include <emblib/algorithm.hpp>
+#include <emblib/static_vector.hpp>
 #include <algorithm>
 #include <initializer_list>
 
