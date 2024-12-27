@@ -1,40 +1,37 @@
-#include "cli_server.h"
-
+#include "cli_server.hpp"
 
 namespace cli {
-
 
 const char* prompt_begin = CLI_PROMPT_BEGIN;
 const char* prompt_end = CLI_PROMPT_END;
 
-
 int (*server::_exec)(int argc, const char** argv) = server::_exec_null;
 
-
 const server::EscSeq server::escseq_list[] = {
-{.str = "\x0D",         .len = 1,   .handler = server::_esc_return},
-{.str = "\x0A",         .len = 1,   .handler = server::_esc_return},
-{.str = CLI_ESC"[D",	.len = 3,   .handler = server::_esc_move_cursor_left},
-{.str = CLI_ESC"[C",	.len = 3,   .handler = server::_esc_move_cursor_right},
-{.str = CLI_ESC"[H",	.len = 3,   .handler = server::_esc_home},
-{.str = CLI_ESC"[F",	.len = 3,   .handler = server::_esc_end},
-{.str = "\x08",         .len = 1,   .handler = server::_esc_back},
-{.str = "\x7F",         .len = 1,   .handler = server::_esc_back},
-{.str = CLI_ESC"[3~",   .len = 4,   .handler = server::_esc_del},
-{.str = CLI_ESC"[A",    .len = 3,   .handler = server::_esc_up},
-{.str = CLI_ESC"[B",    .len = 3,   .handler = server::_esc_down},
+    {.str = "\x0D", .len = 1, .handler = server::_esc_return},
+    {.str = "\x0A", .len = 1, .handler = server::_esc_return},
+    {.str = CLI_ESC "[D", .len = 3, .handler = server::_esc_move_cursor_left},
+    {.str = CLI_ESC "[C", .len = 3, .handler = server::_esc_move_cursor_right},
+    {.str = CLI_ESC "[H", .len = 3, .handler = server::_esc_home},
+    {.str = CLI_ESC "[F", .len = 3, .handler = server::_esc_end},
+    {.str = "\x08", .len = 1, .handler = server::_esc_back},
+    {.str = "\x7F", .len = 1, .handler = server::_esc_back},
+    {.str = CLI_ESC "[3~", .len = 4, .handler = server::_esc_del},
+    {.str = CLI_ESC "[A", .len = 3, .handler = server::_esc_up},
+    {.str = CLI_ESC "[B", .len = 3, .handler = server::_esc_down},
 };
 
+const size_t escseq_list_size =
+        sizeof(server::escseq_list) / sizeof(server::escseq_list[0]);
 
-const size_t escseq_list_size = sizeof(server::escseq_list) / sizeof(server::escseq_list[0]);
-
-
-void server::init(const char* device_name, mcu::uart::tty* tty,
-                        mcu::gpio::output_pin* pin_rts, mcu::gpio::input_pin* pin_cts,
-                        const char* welcome_message) {
+void server::init(const char* device_name,
+                  mcu::uart::tty* tty,
+                  mcu::gpio::output_pin* pin_rts,
+                  mcu::gpio::input_pin* pin_cts,
+                  const char* welcome_message) {
     _tty = tty;
-    _pin_rts = pin_rts;	// output
-    _pin_cts = pin_cts;	// input
+    _pin_rts = pin_rts; // output
+    _pin_cts = pin_cts; // input
 
     memset(_prompt, 0, CLI_PROMPT_MAX_LENGTH);
     strcat(_prompt, prompt_begin);
@@ -45,9 +42,9 @@ void server::init(const char* device_name, mcu::uart::tty* tty,
     _print_prompt();
 }
 
-
 void server::run() {
-    if (!_tty || !_enabled) return;
+    if (!_tty || !_enabled)
+        return;
 
     if (!_output_buf.empty()) {
         if (_tty->putchar(_output_buf.front()) != EOF) {
@@ -61,16 +58,9 @@ void server::run() {
     }
 }
 
+void server::enable() { _enabled = true; }
 
-void server::enable() {
-    _enabled = true;
-}
-
-
-void server::disable() {
-    _enabled = false;
-}
-
+void server::disable() { _enabled = false; }
 
 void server::_print(char ch) {
     if (!_output_buf.full()) {
@@ -78,26 +68,23 @@ void server::_print(char ch) {
     }
 }
 
-
 void server::_print(const char* str) {
     while ((*str != '\0') && !_output_buf.full()) {
         _output_buf.push(*str++);
     }
 }
 
-
-void server::_print_blocking(const char* str)
-{
-    if (!_tty) return;
+void server::_print_blocking(const char* str) {
+    if (!_tty)
+        return;
     while (*str != '\0') {
-        while (_tty->putchar(*str) != *str) {}
+        while (_tty->putchar(*str) != *str) {
+        }
         ++str;
     }
 }
 
-
-void server::_process_char(char ch)
-{
+void server::_process_char(char ch) {
     if (_cmdline.full()) {
         return;
     }
@@ -129,8 +116,10 @@ void server::_process_char(char ch)
         int possible_escseq_count = 0;
         size_t escseq_idx = 0;
         for (size_t i = 0; i < escseq_list_size; ++i) {
-            if ((_escseq.lenght() <= escseq_list[i].len)
-                    && (strncmp(_escseq.data(), escseq_list[i].str, _escseq.lenght()) == 0)) {
+            if ((_escseq.lenght() <= escseq_list[i].len) &&
+                (strncmp(_escseq.data(),
+                         escseq_list[i].str,
+                         _escseq.lenght()) == 0)) {
                 ++possible_escseq_count;
                 escseq_idx = i;
             }
@@ -164,17 +153,15 @@ void server::_process_char(char ch)
     }
 }
 
-
 void server::_move_cursor(int offset) {
     char str[16] = {0};
     if (offset > 0) {
-        snprintf(str, 16, CLI_ESC"[%dC", offset);
+        snprintf(str, 16, CLI_ESC "[%dC", offset);
     } else if (offset < 0) {
-        snprintf(str, 16, CLI_ESC"[%dD", -(offset));
+        snprintf(str, 16, CLI_ESC "[%dD", -(offset));
     }
     _print(str);
 }
-
 
 void server::_print_welcome(const char* welcome_message) {
     cli::nextline_blocking();
@@ -187,7 +174,6 @@ void server::_print_welcome(const char* welcome_message) {
     cli::nextline_blocking();
 }
 
-
 void server::_print_prompt() {
     _print(CLI_ENDL);
     _print(_prompt);
@@ -195,8 +181,8 @@ void server::_print_prompt() {
     _cursor_pos = 0;
 }
 
-
-int server::_tokenize(const char** argv, emb::static_string<CLI_CMDLINE_MAX_LENGTH>& cmdline) {
+int server::_tokenize(const char** argv,
+                      emb::static_string<CLI_CMDLINE_MAX_LENGTH>& cmdline) {
     int argc = 0;
     size_t idx = 0;
 
@@ -232,7 +218,6 @@ int server::_tokenize(const char** argv, emb::static_string<CLI_CMDLINE_MAX_LENG
     }
 }
 
-
 #ifdef CLI_USE_HISTORY
 void server::search_history(HistorySearchDirection dir) {
     static size_t pos;
@@ -242,7 +227,8 @@ void server::search_history(HistorySearchDirection dir) {
         if (_new_cmd_saved) {
             pos = _history_position;
         } else {
-            _history_position = (_history_position + (_history.size() - 1)) % _history.size();
+            _history_position = (_history_position + (_history.size() - 1)) %
+                                _history.size();
             pos = _history_position;
         }
         break;
@@ -273,6 +259,5 @@ void server::search_history(HistorySearchDirection dir) {
     _load_cursor_pos();
 }
 #endif
-
 
 } // namespace cli

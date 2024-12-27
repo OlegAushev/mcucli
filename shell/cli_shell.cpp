@@ -1,7 +1,6 @@
-#include "cli_shell.h"
-#include "../server/cli_server.h"
+#include "cli_shell.hpp"
+#include "../server/cli_server.hpp"
 #include <iterator>
-
 
 int cli_sysinfo(int argc, const char** argv);
 int cli_reboot(int argc, const char** argv);
@@ -9,17 +8,11 @@ int cli_reboot(int argc, const char** argv);
 int cli_syslog(int argc, const char** argv);
 int cli_sysctl(int argc, const char** argv);
 
-
 namespace cli {
-
 
 int list(int, const char**);
 const Cmd cli_list = {
-    .name = "list",
-    .exec = list,
-    .help = "Prints all available commands."
-};
-
+    .name = "list", .exec = list, .help = "Prints all available commands."};
 
 void shell::init(std::initializer_list<const Cmd*> cmds) {
     for (const auto& cmd : cmds) {
@@ -30,15 +23,16 @@ void shell::init(std::initializer_list<const Cmd*> cmds) {
     std::sort(_commands.begin(), _commands.end());
 }
 
-
 int shell::exec(int argc, const char** argv) {
-    if (argc == 0) return 0;
+    if (argc == 0)
+        return 0;
 
     //const Cmd** cmd = emb::binary_find(_commands.begin(), _commands.end(), argv[0]);
-    
-    const Cmd** cmd = std::find_if(_commands.begin(), _commands.end(), [argv](const Cmd* cmd_){
-        return strcmp(argv[0], cmd_->name) == 0;
-    });
+
+    const Cmd** cmd = std::find_if(
+            _commands.begin(), _commands.end(), [argv](const Cmd* cmd_) {
+                return strcmp(argv[0], cmd_->name) == 0;
+            });
 
     if (cmd == _commands.end()) {
         cli::nextline();
@@ -58,7 +52,6 @@ int shell::exec(int argc, const char** argv) {
     }
 }
 
-
 int list(int argc, const char** argv) {
     cli::nextline();
     cli::print("Available commands are:");
@@ -68,6 +61,5 @@ int list(int argc, const char** argv) {
     }
     return 0;
 }
-
 
 } // namespace cli

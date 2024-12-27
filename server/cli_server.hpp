@@ -1,22 +1,18 @@
 #pragma once
 
-
-#include <cstring>
 #include <cstdio>
-#include <mcudrv/generic/uart.hpp>
-#include <mcudrv/generic/gpio.hpp>
+#include <cstring>
+#include <emblib/circular_buffer.hpp>
 #include <emblib/queue.hpp>
 #include <emblib/static_string.hpp>
-#include <emblib/circular_buffer.hpp>
+#include <mcudrv/generic/gpio.hpp>
+#include <mcudrv/generic/uart.hpp>
 
-#include "../cli_config.h"
-
+#include "../cli_config.hpp"
 
 namespace cli {
 
-
-class server
-{
+class server {
     friend void print(const char* str);
     friend void print_blocking(const char* str);
 private:
@@ -34,7 +30,10 @@ private:
     static inline emb::queue<char, CLI_OUTBUT_BUFFER_LENGTH> _output_buf;
 
 #ifdef CLI_USE_HISTORY
-    static inline emb::circular_buffer<emb::static_string<CLI_CMDLINE_MAX_LENGTH>, CLI_HISTORY_LENGTH> _history;
+    static inline emb::circular_buffer<
+            emb::static_string<CLI_CMDLINE_MAX_LENGTH>,
+            CLI_HISTORY_LENGTH>
+            _history;
     static inline size_t _last_cmd_history_pos{0};
     static inline size_t _history_position{0};
     static inline bool _new_cmd_saved{false};
@@ -44,12 +43,14 @@ private:
 public:
     server(const server& other) = delete;
     server& operator=(const server& other) = delete;
-    static void init(const char* device_name, mcu::uart::tty* tty,
-                           mcu::gpio::output_pin* pin_rts, mcu::gpio::input_pin* pin_cts,
-                           const char* welcome_message = nullptr);
+    static void init(const char* device_name,
+                     mcu::uart::tty* tty,
+                     mcu::gpio::output_pin* pin_rts,
+                     mcu::gpio::input_pin* pin_cts,
+                     const char* welcome_message = nullptr);
     static void run();
-    static void register_exec_callback(int (*exec)(int argc, const char** argv))
-    {
+    static void register_exec_callback(int (*exec)(int argc,
+                                                   const char** argv)) {
         _exec = exec;
     }
 
@@ -61,20 +62,19 @@ private:
     static void _print_blocking(const char* str);
 
     static void _process_char(char ch);
-    static void _save_cursor_pos() { _print(CLI_ESC"[s"); }
-    static void _load_cursor_pos() { _print(CLI_ESC"[u"); }
+    static void _save_cursor_pos() { _print(CLI_ESC "[s"); }
+    static void _load_cursor_pos() { _print(CLI_ESC "[u"); }
     static void _move_cursor(int offset);
     static void _print_welcome(const char* welcome_message);
     static void _print_prompt();
-    static int _tokenize(const char** argv, emb::static_string<CLI_CMDLINE_MAX_LENGTH>& cmdline);
+    static int _tokenize(const char** argv,
+                         emb::static_string<CLI_CMDLINE_MAX_LENGTH>& cmdline);
 
     static int (*_exec)(int argc, const char** argv);
-    static int _exec_null(int argc, const char** argv)
-    {
-        _print(CLI_ENDL"error: exec-callback not registered");
-        _print(CLI_ENDL"tokens:");
-        for (auto i = 0; i < argc; ++i)
-        {
+    static int _exec_null(int argc, const char** argv) {
+        _print(CLI_ENDL "error: exec-callback not registered");
+        _print(CLI_ENDL "tokens:");
+        for (auto i = 0; i < argc; ++i) {
             _print(CLI_ENDL);
             _print(argv[i]);
         }
@@ -82,8 +82,7 @@ private:
     }
 
 public:
-    struct EscSeq
-    {
+    struct EscSeq {
         const char* str;
         size_t len;
         void (*handler)();
@@ -102,8 +101,7 @@ private:
 
 private:
 #ifdef CLI_USE_HISTORY
-    enum class HistorySearchDirection
-    {
+    enum class HistorySearchDirection {
         up,
         down,
     };
@@ -111,29 +109,12 @@ private:
 #endif
 };
 
+inline void print(const char* str) { server::_print(str); }
 
-inline void print(const char* str)
-{
-    server::_print(str);
-}
+inline void nextline() { print(CLI_ENDL); }
 
+inline void print_blocking(const char* str) { server::_print_blocking(str); }
 
-inline void nextline()
-{
-    print(CLI_ENDL);
-}
-
-
-inline void print_blocking(const char* str)
-{
-    server::_print_blocking(str);
-}
-
-
-inline void nextline_blocking()
-{
-    print_blocking(CLI_ENDL);
-}
-
+inline void nextline_blocking() { print_blocking(CLI_ENDL); }
 
 } // namespace cli

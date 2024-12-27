@@ -1,18 +1,17 @@
-#include "cli_server.h"
-
+#include "cli_server.hpp"
 
 namespace cli {
 
-
 void server::_esc_return() {
 #ifdef CLI_USE_HISTORY
-    if (!_cmdline.empty()) 	{
+    if (!_cmdline.empty()) {
         if (_history.empty()) {
             _history.push_back(_cmdline);
             _last_cmd_history_pos = 0;
         } else if (_cmdline != _history.back()) {
             _history.push_back(_cmdline);
-            _last_cmd_history_pos = (_last_cmd_history_pos + 1) % _history.capacity();
+            _last_cmd_history_pos =
+                    (_last_cmd_history_pos + 1) % _history.capacity();
         }
     }
     _new_cmd_saved = true;
@@ -37,23 +36,19 @@ void server::_esc_return() {
     _print_prompt();
 }
 
-
 void server::_esc_move_cursor_left() {
     if (_cursor_pos > 0) {
         --_cursor_pos;
-        _print(CLI_ESC"[D");
+        _print(CLI_ESC "[D");
     }
-
 }
-
 
 void server::_esc_move_cursor_right() {
     if (_cursor_pos < _cmdline.lenght()) {
         ++_cursor_pos;
-        _print(CLI_ESC"[C");
+        _print(CLI_ESC "[C");
     }
 }
-
 
 void server::_esc_home() {
     if (_cursor_pos > 0) {
@@ -62,14 +57,12 @@ void server::_esc_home() {
     }
 }
 
-
 void server::_esc_end() {
     if (_cursor_pos < _cmdline.lenght()) {
         _move_cursor(int(_cmdline.lenght()) - int(_cursor_pos));
         _cursor_pos = _cmdline.lenght();
     }
 }
-
 
 void server::_esc_back() {
     if (_cursor_pos > 0) {
@@ -79,14 +72,14 @@ void server::_esc_back() {
         _cmdline.pop_back();
         --_cursor_pos;
 
-        _print(CLI_ESC "[D"" " CLI_ESC "[D");	// delete symbol
+        _print(CLI_ESC "[D"
+                       " " CLI_ESC "[D"); // delete symbol
         _save_cursor_pos();
         _print(_cmdline.begin() + _cursor_pos);
-        _print(" ");				// hide last symbol
+        _print(" "); // hide last symbol
         _load_cursor_pos();
     }
 }
-
 
 void server::_esc_del() {
     if (_cursor_pos < _cmdline.lenght()) {
@@ -102,7 +95,6 @@ void server::_esc_del() {
     }
 }
 
-
 void server::_esc_up() {
 #ifdef CLI_USE_HISTORY
     if (!_history.empty()) {
@@ -111,7 +103,6 @@ void server::_esc_up() {
 #endif
 }
 
-
 void server::_esc_down() {
 #ifdef CLI_USE_HISTORY
     if (!_history.empty()) {
@@ -119,6 +110,5 @@ void server::_esc_down() {
     }
 #endif
 }
-
 
 } // namespace cli
